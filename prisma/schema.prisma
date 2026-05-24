@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(OPERATOR)
+  createdAt DateTime @default(now())
+}
+
+model Tour {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String
+  location    String
+  duration    String
+  coverImage  String
+  createdAt   DateTime      @default(now())
+
+  dates       TourDate[]
+  programs    TourProgram[]
+}
+
+model TourProgram {
+  id          String @id @default(cuid())
+  day         Int
+  title       String
+  description String
+
+  tourId String
+  tour   Tour @relation(fields: [tourId], references: [id], onDelete: Cascade)
+}
+
+model TourDate {
+  id           String   @id @default(cuid())
+  startDate    DateTime
+  endDate      DateTime
+  capacity     Int
+  price        Int
+  createdAt    DateTime @default(now())
+
+  tourId String
+  tour   Tour @relation(fields: [tourId], references: [id], onDelete: Cascade)
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id             String   @id @default(cuid())
+  customerName   String
+  phone          String
+  email          String?
+  personCount    Int
+  paymentStatus  PaymentStatus @default(PENDING)
+  source         ReservationSource @default(PANEL)
+  notes          String?
+
+  createdAt DateTime @default(now())
+
+  tourDateId String
+  tourDate   TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  SUPER_ADMIN
+  OPERATOR
+  GUIDE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum ReservationSource {
+  PANEL
+  WHATSAPP
+  WEBSITE
+}
