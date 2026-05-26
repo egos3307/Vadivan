@@ -1,39 +1,63 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+const menuItems = [
+  {
+    title: 'Dashboard',
+    href: '/admin',
+    icon: '📊'
+  },
+  {
+    title: 'Turlar',
+    href: '/admin/turlar',
+    icon: '🌍'
+  },
+  {
+    title: 'Tarihler',
+    href: '/admin/tarihler',
+    icon: '📅'
+  },
+  {
+    title: 'Rezervasyonlar',
+    href: '/admin/rezervasyonlar',
+    icon: '📝'
+  }
+]
 
 export default function AdminSidebar() {
-  return (
-    <aside className="w-72 min-h-screen bg-[#111] text-white p-6">
-      <div>
-        <h1 className="text-3xl font-bold">
-          VadiVan
-        </h1>
+  const pathname = usePathname()
 
-        <p className="text-white/50 mt-2 text-sm">
-          Admin Panel
-        </p>
+  return (
+    <div className="admin-sidebar-container">
+      <div className="admin-sidebar-header">
+        <h1 className="admin-logo">VadiVan</h1>
+        <p className="admin-subtitle">YÖNETİM PANELİ</p>
       </div>
 
-      <nav className="mt-12 flex flex-col gap-3">
-        <Link href="/admin" className="p-4 rounded-2xl hover:bg-white/10 transition">
-          Dashboard
-        </Link>
-
-        <Link href="/admin/turlar" className="p-4 rounded-2xl hover:bg-white/10 transition">
-          Turlar
-        </Link>
-
-        <Link href="/admin/tarihler" className="p-4 rounded-2xl hover:bg-white/10 transition">
-          Tarihler
-        </Link>
-
-        <Link href="/admin/rezervasyonlar" className="p-4 rounded-2xl hover:bg-white/10 transition">
-          Rezervasyonlar
-        </Link>
-
-        <Link href="/admin/musteriler" className="p-4 rounded-2xl hover:bg-white/10 transition">
-          Müşteriler
-        </Link>
+      <nav className="admin-nav">
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
+          
+          return (
+            <Link 
+              key={item.href}
+              href={item.href} 
+              className={`admin-nav-item ${isActive ? 'active' : ''}`}
+            >
+              <span className="admin-nav-icon">{item.icon}</span>
+              <span className="admin-nav-text">{item.title}</span>
+            </Link>
+          )
+        })}
       </nav>
-    </aside>
+
+      <div className="admin-sidebar-footer">
+        <Link href="/" className="back-to-site">
+          <span>←</span> Siteye Dön
+        </Link>
+      </div>
+    </div>
   )
 }

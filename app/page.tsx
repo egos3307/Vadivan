@@ -1,115 +1,170 @@
-export default function HomePage() {
+import Footer from '@/components/layout/Footer'
+import Navbar from '@/components/layout/Navbar'
+import Hero from '@/components/home/Hero'
+import TourCard from '@/components/tour/TourCard'
+import { getTours } from '@/lib/tours'
+
+export const dynamic = 'force-dynamic'
+
+export default async function HomePage() {
+  const tours = await getTours(6)
+
+  const reviews = [
+    {
+      id: 1,
+      name: 'Ahmet Yılmaz',
+      comment: 'VadiVan Gezi ile gittiğimiz Van-Mardin turu hayatımın en unutulmaz deneyimiydi. Organizasyon kusursuzdu.',
+      rating: 5,
+      avatar: 'https://i.pravatar.cc/150?u=ahmet',
+    },
+    {
+      id: 2,
+      name: 'Selin Demir',
+      comment: 'Rehberimiz bölgeye o kadar hakimdi ki, her taşın hikayesini dinlemek büyüleyiciydi. Kesinlikle tavsiye ederim.',
+      rating: 5,
+      avatar: 'https://i.pravatar.cc/150?u=selin',
+    },
+    {
+      id: 3,
+      name: 'Mehmet Can',
+      comment: 'Konaklama yerleri çok kaliteli ve temizdi. Yemekler ise tam bir şölendi. Emeği geçen herkese teşekkürler.',
+      rating: 4,
+      avatar: 'https://i.pravatar.cc/150?u=mehmet',
+    },
+  ]
+
   return (
-    <main className="bg-[#f5f5f5] min-h-screen">
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/80 border-b border-zinc-200">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <h1 className="text-2xl font-black text-[#9a5b17]">
-            VadiVan Gezi
-          </h1>
+    <main className="site-shell">
+      <Navbar />
+      
+      <Hero />
 
-          <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-zinc-700">
-            <a href="/">Anasayfa</a>
-            <a href="/turlar">Turlarımız</a>
-            <a href="/hakkimizda">Hakkımızda</a>
-            <a href="/iletisim">İletişim</a>
-          </nav>
+      <section className="section">
+        <div className="site-container">
+          <div className="category-list">
+            <button className="category-btn active">Tümü</button>
+            <button className="category-btn">Kültür Turları</button>
+            <button className="category-btn">Doğa Turları</button>
+            <button className="category-btn">Doğu Anadolu Turları</button>
+            <button className="category-btn">Fotoğraf Turları</button>
+          </div>
 
-          <button className="bg-[#a96718] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:scale-105 transition duration-300">
-            Rezervasyon Yap
-          </button>
+          <div className="section-heading">
+            <p className="eyebrow">Popüler Rotalar</p>
+            <h2>Gezginlerimizin Favori Keşifleri</h2>
+          </div>
+
+          {tours.length > 0 ? (
+            <div className="tour-grid">
+              {tours.map((tour) => (
+                <TourCard 
+                  key={tour.id}
+                  id={tour.id}
+                  slug={tour.slug}
+                  title={tour.title}
+                  description={tour.description}
+                  coverImage={tour.coverImage}
+                  location={tour.location}
+                  duration={tour.duration}
+                  price={tour.dates[0]?.price}
+                  rating={4.9}
+                  badge="Popüler"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <h3>Henüz yayınlanan tur yok</h3>
+              <p>Admin panelinden ilk tur eklendiğinde bu alan otomatik olarak güncellenecek.</p>
+            </div>
+          )}
         </div>
-      </header>
+      </section>
 
-      <section className="relative h-screen overflow-hidden flex items-center">
-        <img
-          src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?q=80&w=2070&auto=format&fit=crop"
-          className="absolute inset-0 w-full h-full object-cover scale-105"
-        />
+      <section className="section muted">
+        <div className="site-container newsletter-box">
+          <div className="newsletter-content">
+            <h2>Özel Fırsatları Kaçırmayın</h2>
+            <p style={{ color: '#666' }}>E-bültenimize abone olun, sezonun en yeni turlarından ve size özel indirimlerden ilk siz haberdar olun.</p>
+          </div>
+          <form className="newsletter-form">
+            <input type="email" placeholder="E-posta adresiniz" required style={{ padding: '0 15px' }} />
+            <button type="submit">Kaydol</button>
+          </form>
+        </div>
 
-        <div className="absolute inset-0 bg-black/55" />
+        <div className="site-container" style={{ marginTop: '40px' }}>
+           <div className="support-box">
+              <h3>Destek Hattı</h3>
+              <p style={{ color: '#666', marginBottom: '15px' }}>Size en uygun turu seçmek için uzmanlarımızla görüşün.</p>
+              <span className="support-number">0850 000 00 00</span>
+           </div>
+        </div>
+      </section>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-20">
-          <div className="max-w-4xl text-white">
-            <span className="bg-[#c88a2b] px-5 py-2 rounded-full text-sm uppercase tracking-widest font-semibold">
-              Premium Tur Deneyimi
-            </span>
-
-            <h2 className="text-6xl md:text-8xl font-black leading-[0.95] mt-8">
-              Mezopotamya'nın
-              <span className="block text-[#dca35d]">
-                Kalbinde Yolculuk
-              </span>
-            </h2>
-
-            <p className="mt-8 text-xl text-white/80 max-w-2xl leading-relaxed">
-              Van Gölü kıyısından Nemrut Krateri'ne uzanan eşsiz keşif rotaları.
-            </p>
+      <section className="section">
+        <div className="site-container">
+          <div className="section-heading">
+            <p className="eyebrow">Müşteri Yorumları</p>
+            <h2>Gezginlerimizin Deneyimleri</h2>
+          </div>
+          <div className="reviews-grid">
+            {reviews.map((review) => (
+              <div key={review.id} className="review-card">
+                <div className="review-header">
+                  <img src={review.avatar} alt={review.name} className="review-avatar" />
+                  <div>
+                    <div className="review-name">{review.name}</div>
+                    <div className="review-rating">
+                      {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                    </div>
+                  </div>
+                </div>
+                <p style={{ color: '#555', fontStyle: 'italic' }}>"{review.comment}"</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-28">
-        <div className="text-center max-w-3xl mx-auto">
-          <p className="uppercase tracking-[0.3em] text-sm text-zinc-500">
-            Yakında
-          </p>
-
-          <h3 className="text-5xl md:text-6xl font-black mt-6 leading-tight text-zinc-900">
-            Yeni Turlar Çok Yakında
-          </h3>
-
-          <p className="mt-8 text-xl text-zinc-600 leading-relaxed">
-            Şu anda admin panelinden henüz tur eklenmedi. Yeni premium rotalar eklendiğinde burada otomatik olarak yayınlanacak.
-          </p>
-        </div>
-
-        <div className="mt-16 bg-white rounded-[40px] p-14 shadow-xl border border-zinc-100 text-center max-w-5xl mx-auto">
-          <div className="w-24 h-24 rounded-full bg-[#f4e4d0] flex items-center justify-center mx-auto text-5xl">
-            ✈️
+      <section className="section muted">
+        <div className="site-container split align-center">
+          <div>
+            <p className="eyebrow">Neden VadiVan?</p>
+            <h2>Sınırları Aşan Bir Tatil Deneyimi</h2>
+            <p className="section-copy">
+              On yılı aşkın tecrübemizle, sadece bir tur değil, unutulmaz bir hikaye vadediyoruz. 
+              Yerel bağlarımız sayesinde sizi turistlerin bilmediği gizli cennetlerle buluşturuyoruz.
+            </p>
+            <div className="stats">
+              <div>
+                <strong>10k+</strong>
+                <span>Mutlu Gezgin</span>
+              </div>
+              <div>
+                <strong>150+</strong>
+                <span>Benzersiz Rota</span>
+              </div>
+            </div>
           </div>
-
-          <h4 className="text-4xl font-black mt-8 text-zinc-900">
-            Henüz Aktif Tur Bulunmuyor
-          </h4>
-
-          <p className="mt-6 text-zinc-600 text-lg leading-relaxed max-w-2xl mx-auto">
-            Admin panelinden ilk tur oluşturulduğunda tüm rezervasyon sistemi, tarih seçimi ve kontenjan yönetimi otomatik aktif olacak.
-          </p>
+          <div className="feature-list">
+            <div>
+              <strong>Küratörlü Deneyimler</strong>
+              <span>Her rota, konaklamadan yemeğe kadar titizlikle planlanır.</span>
+            </div>
+            <div>
+              <strong>Yerel Uzmanlık</strong>
+              <span>Bölgeyi evi gibi bilen rehberlerle derinlemesine keşif.</span>
+            </div>
+            <div>
+              <strong>7/24 Destek</strong>
+              <span>Yolculuğunuzun her anında yanınızda olan ekibimiz.</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      <footer className="bg-[#161616] text-white py-20 mt-20">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10">
-          <div>
-            <h5 className="text-3xl font-black text-[#d39a58]">
-              VadiVan Gezi
-            </h5>
-
-            <p className="mt-5 text-white/70 leading-relaxed">
-              Van ve Doğu Anadolu'nun premium keşif deneyimi.
-            </p>
-          </div>
-
-          <div>
-            <h6 className="font-bold mb-5">Sayfalar</h6>
-            <div className="flex flex-col gap-3 text-white/70">
-              <a href="/">Anasayfa</a>
-              <a href="/turlar">Turlarımız</a>
-              <a href="/hakkimizda">Hakkımızda</a>
-              <a href="/iletisim">İletişim</a>
-            </div>
-          </div>
-
-          <div>
-            <h6 className="font-bold mb-5">İletişim</h6>
-            <div className="flex flex-col gap-3 text-white/70">
-              <p>Van / Türkiye</p>
-              <p>info@vadivangezi.com</p>
-              <p>+90 555 555 55 55</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   )
 }

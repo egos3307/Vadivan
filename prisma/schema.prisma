@@ -23,7 +23,12 @@ model Tour {
   description String
   location    String
   duration    String
+  maxCapacity Int           @default(12)
   coverImage  String
+  images      String        @default("[]")
+  highlights  String        @default("[]")
+  included    String        @default("[]")
+  excluded    String        @default("[]")
   createdAt   DateTime      @default(now())
 
   dates       TourDate[]
@@ -56,18 +61,43 @@ model TourDate {
 
 model Reservation {
   id             String   @id @default(cuid())
-  customerName   String
-  phone          String
+  customerName   String   // Lead customer name
+  phone          String   // Lead customer phone
   email          String?
   personCount    Int
   paymentStatus  PaymentStatus @default(PENDING)
   source         ReservationSource @default(PANEL)
   notes          String?
+  totalPrice     Float    @default(0)
+
+  persons        ReservationPerson[]
 
   createdAt DateTime @default(now())
 
   tourDateId String
   tourDate   TourDate @relation(fields: [tourDateId], references: [id], onDelete: Cascade)
+}
+
+model ReservationPerson {
+  id              String   @id @default(cuid())
+  gender          Gender
+  firstName       String
+  lastName        String
+  phone           String
+  email           String?
+  birthDate       String?
+  departurePoint  String?
+  tcNo            String?
+  isNotTcCitizen  Boolean  @default(false)
+  roomNumber      Int      @default(1)
+
+  reservationId   String
+  reservation     Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 enum Role {

@@ -1,45 +1,67 @@
-import TourCard from '@/components/tour/TourCard'
+import Footer from '@/components/layout/Footer'
+import Navbar from '@/components/layout/Navbar'
+import { formatPrice, getTours } from '@/lib/tours'
 
-export default function ToursPage() {
+export const dynamic = 'force-dynamic'
+
+export default async function ToursPage() {
+  const tours = await getTours()
+
   return (
-    <main className="min-h-screen bg-[#f8f8f8] pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="mb-14">
-          <p className="text-zinc-500 uppercase tracking-widest text-sm">
-            VadiVan Gezi
+    <main className="site-shell">
+      <Navbar />
+
+      <section className="page-hero tours-hero">
+        <div className="site-container">
+          <p className="eyebrow light">Turlarımız</p>
+          <h1>Admin panelinden yönetilen tur rotaları.</h1>
+          <p>
+            Bu sayfadaki tüm turlar admin panelinden eklenir. Yeni tur
+            oluşturulduğunda burada otomatik görünür.
           </p>
-
-          <h1 className="text-6xl font-bold mt-3">
-            Turlarımız
-          </h1>
         </div>
+      </section>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <TourCard
-            title="Görkemli Van Turu"
-            image="/images/tour-1.jpg"
-            location="Van"
-            duration="3 Gün"
-            price={6500}
-          />
-
-          <TourCard
-            title="Akdamar Premium"
-            image="/images/tour-2.jpg"
-            location="Van Gölü"
-            duration="2 Gün"
-            price={4200}
-          />
-
-          <TourCard
-            title="Doğu Anadolu Keşfi"
-            image="/images/tour-3.jpg"
-            location="Doğu Anadolu"
-            duration="5 Gün"
-            price={12900}
-          />
+      <section className="section">
+        <div className="site-container">
+          {tours.length > 0 ? (
+            <div className="tour-grid wide">
+              {tours.map((tour) => (
+                <article className="tour-card detailed" key={tour.id}>
+                  <img src={tour.coverImage} alt={tour.title} />
+                  <div>
+                    <div className="tour-meta">
+                      <span>{tour.location}</span>
+                      <span>{tour.duration}</span>
+                    </div>
+                    <h2>{tour.title}</h2>
+                    <p>{tour.description}</p>
+                    <div className="tour-footer">
+                      <strong>{formatPrice(tour.dates[0]?.price)}</strong>
+                      <a href={`/turlar/${tour.slug}`} className="button compact">
+                        Detayları Gör
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <h2>Henüz tur eklenmedi</h2>
+              <p>
+                Admin panelinden tur oluşturduğunuzda kartlar bu sayfaya
+                otomatik olarak düşer.
+              </p>
+              <a href="/admin/turlar" className="button primary">
+                Admin Paneline Git
+              </a>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
+
+      <Footer />
     </main>
   )
 }
