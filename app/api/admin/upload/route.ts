@@ -27,17 +27,27 @@ export async function POST(req: Request) {
     const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
     const publicPath = join(process.cwd(), 'public')
     
-    // Klasörün var olduğundan emin ol (genelde public zaten vardır ama yine de)
+    console.log('Upload target directory:', publicPath)
+    
     try {
       await mkdir(publicPath, { recursive: true })
-    } catch (e) {}
+    } catch (e) {
+      console.error('Error creating public directory:', e)
+    }
 
     const filePath = join(publicPath, fileName)
+    console.log('Attempting to write file to:', filePath)
+    
     await writeFile(filePath, buffer)
     
+    console.log('File written successfully')
     return NextResponse.json({ success: true, url: `/${fileName}` })
-  } catch (error) {
-    console.error('Upload Error:', error)
-    return NextResponse.json({ success: false, message: 'Yükleme hatası oluştu.' }, { status: 500 })
+  } catch (error: any) {
+    console.error('Upload Error Details:', error)
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Yükleme hatası: ' + (error.message || 'Bilinmeyen hata'),
+      error: error.toString()
+    }, { status: 500 })
   }
 }
