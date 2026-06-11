@@ -36,6 +36,7 @@ export default function TourForm() {
       description: formData.get('description'),
       included: String(formData.get('included') || '').split(',').map(s => s.trim()).filter(Boolean),
       excluded: String(formData.get('excluded') || '').split(',').map(s => s.trim()).filter(Boolean),
+      terms: String(formData.get('terms') || '').split(',').map(s => s.trim()).filter(Boolean),
       images: String(formData.get('images') || '').split(',').map(s => s.trim()).filter(Boolean),
       programTitle: formData.get('programTitle'),
       programDescription: formData.get('programDescription'),
@@ -168,6 +169,11 @@ export default function TourForm() {
           </div>
         ))}
       </div>
+
+      <label>
+        Haklarınız ve Kurallar (Virgülle ayırın - PDF Bilette görünecek)
+        <textarea name="terms" placeholder="Rezervasyon iptal şartları, yanınızda getirmeniz gerekenler..." />
+      </label>
 
       <button 
         type="submit" 

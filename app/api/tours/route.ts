@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/database'
 import { createSlug } from '@/lib/tours'
 
 export async function GET() {

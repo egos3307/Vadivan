@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/database'
 
 export function createSlug(value: string) {
   return value

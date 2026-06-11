@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Footer from '@/components/layout/Footer'
 import Navbar from '@/components/layout/Navbar'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/database'
 import { formatPrice } from '@/lib/tours'
 
 export const dynamic = 'force-dynamic'
@@ -58,10 +58,10 @@ export default async function TourDetailPage({ params }: Props) {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="detail-hero" style={{ height: '75vh', position: 'relative', overflow: 'hidden' }}>
+      <section className="detail-hero detail-hero-mobile" style={{ height: '75vh', position: 'relative', overflow: 'hidden' }}>
         <img src={tour.coverImage} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)' }} />
-        <div className="site-container" style={{ position: 'absolute', bottom: '80px', left: '50%', transform: 'translateX(-50%)', color: '#fff', width: '100%' }}>
+        <div className="site-container detail-hero-content-mobile" style={{ position: 'absolute', bottom: '80px', left: '50%', transform: 'translateX(-50%)', color: '#fff', width: '100%' }}>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
             <span style={{ background: '#ff8c00', padding: '6px 16px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '850', letterSpacing: '0.05em' }}>POPÜLER TUR</span>
             <div style={{ color: '#FFD700', fontSize: '1.2rem' }}>★★★★★</div>
@@ -99,7 +99,7 @@ export default async function TourDetailPage({ params }: Props) {
               <div className="program-list" style={{ display: 'grid', gap: '24px' }}>
                 {tour.programs.length > 0 ? (
                   tour.programs.map((program, idx) => (
-                    <article className="program-item" key={program.id} style={{ border: 'none', background: '#f8f9fa', borderRadius: '20px', padding: '30px', display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+                    <article className="program-item responsive-flex" key={program.id} style={{ border: 'none', background: '#f8f9fa', borderRadius: '20px', padding: '30px', display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                       <span style={{ 
                         background: '#fff', 
                         minWidth: '56px', 
@@ -132,7 +132,7 @@ export default async function TourDetailPage({ params }: Props) {
             </section>
 
             {/* Included / Excluded Grid */}
-            <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '48px' }}>
+            <section className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '48px' }}>
               <div style={{ background: '#f0f9f4', padding: '40px', borderRadius: '28px' }}>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#2a4d44', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #2a4d44', display: 'grid', placeItems: 'center' }}>
@@ -169,7 +169,7 @@ export default async function TourDetailPage({ params }: Props) {
             {images.length > 0 && (
               <section style={{ marginTop: '64px' }}>
                 <h2 style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '32px' }}>Görüntüler</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridTemplateRows: 'repeat(2, 250px)', gap: '20px' }}>
+                <div className="responsive-image-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gridTemplateRows: 'repeat(2, 250px)', gap: '20px' }}>
                   <img src={images[0]} style={{ gridRow: 'span 2', width: '100%', height: '100%', objectFit: 'cover', borderRadius: '32px' }} />
                   <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px' }}>
                      <img src={images[1] || images[0]} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '32px' }} />
@@ -189,7 +189,7 @@ export default async function TourDetailPage({ params }: Props) {
                 <h2 style={{ fontSize: '2rem', fontWeight: '900' }}>Misafir Yorumları</h2>
                 <a href="#" style={{ color: '#8a4f17', fontWeight: '750', fontSize: '0.9rem' }}>Tümünü Gör →</a>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 {reviews.map((review) => (
                   <div key={review.id} style={{ background: '#fff', border: '1px solid #edf2f7', padding: '32px', borderRadius: '28px', boxShadow: '0 10px 30px rgba(0,0,0,0.03)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
@@ -209,7 +209,7 @@ export default async function TourDetailPage({ params }: Props) {
           </div>
 
           {/* Sidebar Booking Card */}
-          <aside className="booking-card" style={{ padding: '40px', borderRadius: '32px', boxShadow: '0 40px 80px rgba(0,0,0,0.08)', border: '1px solid #f1f1f1' }}>
+          <aside className="booking-card responsive-padding" style={{ padding: '40px', borderRadius: '32px', boxShadow: '0 40px 80px rgba(0,0,0,0.08)', border: '1px solid #f1f1f1' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <p style={{ color: '#718096', fontSize: '0.95rem', fontWeight: '600' }}>Kişi Başı</p>
               <span style={{ background: '#f0f9f4', color: '#2a4d44', padding: '6px 14px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: '850' }}>Erken Rezervasyon</span>
@@ -226,7 +226,7 @@ export default async function TourDetailPage({ params }: Props) {
                 </select>
               </label>
               
-              <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="form-row responsive-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <label style={{ fontSize: '0.85rem', fontWeight: '800', color: '#4a5568' }}>Yetişkin <input type="number" defaultValue={1} min={1} style={{ background: '#f7fafc', border: '1px solid #e2e8f0', borderRadius: '16px', height: '52px', marginTop: '8px' }} /></label>
                 <label style={{ fontSize: '0.85rem', fontWeight: '800', color: '#4a5568' }}>Çocuk <input type="number" defaultValue={0} min={0} style={{ background: '#f7fafc', border: '1px solid #e2e8f0', borderRadius: '16px', height: '52px', marginTop: '8px' }} /></label>
               </div>

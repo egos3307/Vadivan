@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/database'
 import { createSlug } from '@/lib/tours'
 import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const highlights = Array.isArray(data.highlights) ? data.highlights : []
     const included = Array.isArray(data.included) ? data.included : []
     const excluded = Array.isArray(data.excluded) ? data.excluded : []
+    const terms = Array.isArray(data.terms) ? data.terms : []
     const images = Array.isArray(data.images) ? data.images : []
 
     const programTitle = String(data.programTitle || '').trim()
@@ -32,38 +33,41 @@ export async function POST(req: Request) {
     const existing = await prisma.tour.findUnique({ where: { slug: baseSlug } })
     const slug = existing ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug
 
+    const tourData: any = {
+      title,
+      slug,
+      description,
+      location,
+      duration,
+      coverImage,
+      maxCapacity,
+      highlights: JSON.stringify(highlights),
+      included: JSON.stringify(included),
+      excluded: JSON.stringify(excluded),
+      images: JSON.stringify(images),
+      terms: JSON.stringify(terms), // Re-enabled
+      programs:
+        programTitle || programDescription
+          ? {
+              create: {
+                day: 1,
+                title: programTitle || 'Tur Programı',
+                description: programDescription || description,
+              },
+            }
+          : undefined,
+      dates: {
+        create: inputDates.map((d: any) => ({
+          startDate: new Date(d.startDate),
+          endDate: new Date(d.endDate),
+          capacity: Number(d.capacity || maxCapacity),
+          price: Number(d.price || 0),
+        }))
+      }
+    }
+
     const tour = await prisma.tour.create({
-      data: {
-        title,
-        slug,
-        description,
-        location,
-        duration,
-        coverImage,
-        maxCapacity,
-        highlights: JSON.stringify(highlights),
-        included: JSON.stringify(included),
-        excluded: JSON.stringify(excluded),
-        images: JSON.stringify(images),
-        programs:
-          programTitle || programDescription
-            ? {
-                create: {
-                  day: 1,
-                  title: programTitle || 'Tur Programı',
-                  description: programDescription || description,
-                },
-              }
-            : undefined,
-        dates: {
-          create: inputDates.map((d: any) => ({
-            startDate: new Date(d.startDate),
-            endDate: new Date(d.endDate),
-            capacity: Number(d.capacity || maxCapacity),
-            price: Number(d.price || 0),
-          }))
-        }
-      },
+      data: tourData,
     })
 
     revalidatePath('/')
@@ -71,9 +75,17 @@ export async function POST(req: Request) {
     revalidatePath('/admin/turlar')
 
     return NextResponse.json({ message: 'Tur başarıyla eklendi.', success: true, tour })
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json({ message: 'Beklenmedik bir hata oluştu.' }, { status: 500 })
+  } catch (error: any) {
+    console.error('CRITICAL: Tour API Error:', error)
+    
+    let errorMessage = 'Beklenmedik bir sunucu hatası oluştu.'
+    if (error.message && error.message.includes('Unknown argument')) {
+      errorMessage = 'Sistem senkronizasyon hatası: ' + error.message.split('\n').pop()
+    } else if (error.message) {
+      errorMessage = 'Hata: ' + error.message
+    }
+
+    return NextResponse.json({ message: errorMessage }, { status: 500 })
   }
 }
 

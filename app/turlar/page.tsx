@@ -50,12 +50,8 @@ export default async function ToursPage() {
             <div className="empty-state">
               <h2>Henüz tur eklenmedi</h2>
               <p>
-                Admin panelinden tur oluşturduğunuzda kartlar bu sayfaya
-                otomatik olarak düşer.
+                Yakında yeni turlarımızla buradayız. Takipte kalın!
               </p>
-              <a href="/admin/turlar" className="button primary">
-                Admin Paneline Git
-              </a>
             </div>
           )}
         </div>

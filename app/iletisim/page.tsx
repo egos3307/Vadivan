@@ -26,10 +26,10 @@ export default function ContactPage() {
       <section className="section">
         <div className="site-container">
           <div className="detail-layout">
-            <div className="info-panel" style={{ padding: '40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
+            <div className="info-panel responsive-padding" style={{ padding: '40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
               <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '30px', color: '#171717' }}>Mesaj Gönderin</h2>
               <form style={{ display: 'grid', gap: '20px' }}>
-                <div className="form-row">
+                <div className="form-row responsive-grid">
                   <label>
                     Adınız Soyadınız
                     <input type="text" placeholder="Örn: Ahmet Yılmaz" required />

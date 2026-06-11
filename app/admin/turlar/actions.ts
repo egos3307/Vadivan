@@ -1,6 +1,6 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/database'
 import { createSlug } from '@/lib/tours'
 import { revalidatePath } from 'next/cache'
 

@@ -29,6 +29,7 @@ model Tour {
   highlights  String        @default("[]")
   included    String        @default("[]")
   excluded    String        @default("[]")
+  terms       String?       @default("[]")
   createdAt   DateTime      @default(now())
 
   dates       TourDate[]
@@ -61,8 +62,8 @@ model TourDate {
 
 model Reservation {
   id             String   @id @default(cuid())
-  customerName   String   // Lead customer name
-  phone          String   // Lead customer phone
+  customerName   String
+  phone          String
   email          String?
   personCount    Int
   paymentStatus  PaymentStatus @default(PENDING)
@@ -80,19 +81,27 @@ model Reservation {
 
 model ReservationPerson {
   id              String   @id @default(cuid())
-  gender          Gender
-  firstName       String
-  lastName        String
+  fullName        String
   phone           String
-  email           String?
-  birthDate       String?
-  departurePoint  String?
   tcNo            String?
-  isNotTcCitizen  Boolean  @default(false)
-  roomNumber      Int      @default(1)
+  roomType        RoomType @default(DOUBLE)
+  city            String?
+  deposit         Float    @default(0)
+  remainingDebt   Float    @default(0)
+  notes           String?
+  
+  gender          Gender?   @default(MALE)
+  firstName       String?   @default("")
+  lastName        String?   @default("")
 
   reservationId   String
   reservation     Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+}
+
+enum RoomType {
+  SINGLE
+  DOUBLE
+  TRIPLE
 }
 
 enum Gender {

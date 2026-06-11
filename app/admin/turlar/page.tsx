@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/database'
 import { formatPrice } from '@/lib/tours'
 import TourForm from './TourForm'
 import DeleteTourButton from './DeleteTourButton'
