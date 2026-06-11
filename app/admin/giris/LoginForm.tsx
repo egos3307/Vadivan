@@ -26,8 +26,7 @@ export default function LoginForm() {
       const result = await res.json()
       
       if (res.ok && result.success) {
-        router.push('/admin/turlar')
-        router.refresh()
+        window.location.href = '/admin/turlar'
       } else {
         setError(result.message || 'Giriş başarısız oldu.')
       }
