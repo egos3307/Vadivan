@@ -11,18 +11,7 @@ export default async function ToursPage() {
     <main className="site-shell">
       <Navbar />
 
-      <section className="page-hero tours-hero">
-        <div className="site-container">
-          <p className="eyebrow light">Turlarımız</p>
-          <h1>Admin panelinden yönetilen tur rotaları.</h1>
-          <p>
-            Bu sayfadaki tüm turlar admin panelinden eklenir. Yeni tur
-            oluşturulduğunda burada otomatik görünür.
-          </p>
-        </div>
-      </section>
-
-      <section className="section">
+      <section className="section" style={{ paddingTop: '120px' }}>
         <div className="site-container">
           {tours.length > 0 ? (
             <div className="tour-grid wide">

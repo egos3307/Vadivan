@@ -8,17 +8,15 @@ export default function Hero() {
         playsInline
         className="hero-video"
       >
-        <source src="/hero-video.mov" type="video/mp4" />
+        <source src="/hero.mov" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <div className="hero-overlay" />
 
       <div className="hero-content">
-        <h1>Hayalindeki Rotayı Keşfetmeye Hazır Mısın?</h1>
+        <h1>Doğada Huzur Bulmaya Hazır Mısın?</h1>
         <p>
-          Karadeniz’in yeşilinden Akdeniz’in mavisine, tarihin sıfır noktasından
-          dünyanın öbür ucuna... Güvenli, konforlu ve unutulmaz turlarla
-          sınırları aşın.
+             Sisli yaylalardan coşkun derelere uzanan benzersiz rotalarda, doğanın en güzel hâlini Vadi Van Gezi ile deneyimle.
         </p>
 
         <div className="filter-bar">

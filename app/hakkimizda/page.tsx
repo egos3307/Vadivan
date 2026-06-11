@@ -35,16 +35,16 @@ export default function AboutPage() {
       <section className="section">
         <div className="site-container split align-center">
           <img
-            src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1600&auto=format&fit=crop"
+            src="/IMG_2921.jpeg"
             alt="Doğa rotasında seyahat eden yol"
             className="about-image"
           />
 
           <div>
             <p className="eyebrow">Biz Kimiz?</p>
-            <h2>Amacımız, bölgeyi sadece gezdirmek değil doğru hikayeyle tanıtmak.</h2>
+            <h2>Doğa turizminde 16. yılımızla, bölgeyi sadece gezdirmek değil doğru hikayeyle tanıtıyoruz.</h2>
             <p className="section-copy">
-              Misafirlerimizin Van'a ayırdığı zamanı en verimli şekilde
+              On altı yıllık derin tecrübemizle, misafirlerimizin Van'a ayırdığı zamanı en verimli şekilde
               değerlendirmesi için rota, ulaşım ve rehberlik detaylarını tek
               merkezden planlıyoruz. Her turda güvenilir organizasyon, temiz
               iletişim ve bölgeye saygılı bir keşif anlayışıyla hareket ediyoruz.
@@ -52,11 +52,11 @@ export default function AboutPage() {
 
             <div className="stats">
               <div>
-                <strong>120+</strong>
-                <span>Tur organizasyonu</span>
+                <strong>16 Yıl</strong>
+                <span>Doğa turizmi tecrübesi</span>
               </div>
               <div>
-                <strong>5K+</strong>
+                <strong>10K+</strong>
                 <span>Mutlu misafir</span>
               </div>
             </div>

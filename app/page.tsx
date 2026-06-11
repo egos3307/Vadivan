@@ -12,24 +12,24 @@ export default async function HomePage() {
   const reviews = [
     {
       id: 1,
-      name: 'Ahmet Yılmaz',
-      comment: 'VadiVan Gezi ile gittiğimiz Van-Mardin turu hayatımın en unutulmaz deneyimiydi. Organizasyon kusursuzdu.',
+      name: 'F*** Y***',
+      comment: 'Hakkari deneyimini Vadivan Tur ile yaşadık 👍 Tur ile bir bölgeyi gezmek istediğinizde rehber çok önemlidir. Vadivan rehberleri çok donanımlı, çok samimi ve sıcak insanlar🙏 Ömer beye ve canım Hüseyin beye çok teşekkürler🙏💐❤️',
       rating: 5,
-      avatar: 'https://i.pravatar.cc/150?u=ahmet',
+      link: 'https://maps.app.goo.gl/8YVptqxz8ptL6BRN6',
     },
     {
       id: 2,
-      name: 'Selin Demir',
-      comment: 'Rehberimiz bölgeye o kadar hakimdi ki, her taşın hikayesini dinlemek büyüleyiciydi. Kesinlikle tavsiye ederim.',
+      name: 'C*** C***',
+      comment: 'Vadivan Turizm ile Hakkari turuna katıldım ve tek kelimeyle muhteşemdi. Uzun zamandır bu kadar keyifli, eğlenceli ve enerjik bir tura katılmamıştım. Hüseyin Beyin güler yüzü ve enerjisi, Ömer Beyin bilgisi ve donanımı bizi bambaşka bir seviyeye taşıdı. Emeği geçen tüm ekibe çok teşekkür ediyorum.',
       rating: 5,
-      avatar: 'https://i.pravatar.cc/150?u=selin',
+      link: 'https://maps.app.goo.gl/kBcxAaM2tnQeZzVG6',
     },
     {
       id: 3,
-      name: 'Mehmet Can',
-      comment: 'Konaklama yerleri çok kaliteli ve temizdi. Yemekler ise tam bir şölendi. Emeği geçen herkese teşekkürler.',
-      rating: 4,
-      avatar: 'https://i.pravatar.cc/150?u=mehmet',
+      name: 'M***',
+      comment: 'Enver beye çok teşekkür ediyorum güleryüzü sayesinde çok konforlu bir gezi yaşadık',
+      rating: 5,
+      link: 'https://maps.app.goo.gl/cvib1dW9ps78pqgz8',
     },
   ]
 
@@ -82,23 +82,70 @@ export default async function HomePage() {
       </section>
 
       <section className="section muted">
-        <div className="site-container newsletter-box">
-          <div className="newsletter-content">
-            <h2>Özel Fırsatları Kaçırmayın</h2>
-            <p style={{ color: '#666' }}>E-bültenimize abone olun, sezonun en yeni turlarından ve size özel indirimlerden ilk siz haberdar olun.</p>
+        <div className="site-container">
+          <div className="section-heading" style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <p className="eyebrow">Bizi Takip Edin</p>
+            <h2 style={{ 
+              marginBottom: '16px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '12px',
+              fontSize: '2.5rem',
+              margin: '0 auto'
+            }}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#8a4f17' }}>
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              @vadivangezi
+            </h2>
+            <p style={{ color: '#666', maxWidth: '600px', margin: '0 auto 24px' }}>
+              En yeni turlarımızdan haberdar olmak ve Doğu'nun gizli kalmış güzelliklerini keşfetmek için bizi takip edin.
+            </p>
           </div>
-          <form className="newsletter-form">
-            <input type="email" placeholder="E-posta adresiniz" required style={{ padding: '0 15px' }} />
-            <button type="submit">Kaydol</button>
-          </form>
-        </div>
 
-        <div className="site-container" style={{ marginTop: '40px' }}>
-           <div className="support-box">
-              <h3>Destek Hattı</h3>
-              <p style={{ color: '#666', marginBottom: '15px' }}>Size en uygun turu seçmek için uzmanlarımızla görüşün.</p>
-              <span className="support-number">0850 000 00 00</span>
-           </div>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
+            gap: '20px',
+            marginTop: '40px'
+          }}>
+            {[
+              'DZaE0xAMTwj',
+              'DWcF71ZjN4f',
+              'DZFPeX9Mtzg',
+              'DZU3pS1sCIC'
+            ].map((id) => (
+              <div key={id} style={{ 
+                borderRadius: '16px', 
+                overflow: 'hidden', 
+                background: '#fff', 
+                aspectRatio: '9/16',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                border: '1px solid rgba(0,0,0,0.05)',
+                position: 'relative'
+              }}>
+                <iframe
+                  src={`https://www.instagram.com/reel/${id}/embed/`}
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  scrolling="no"
+                  allowTransparency={true}
+                  style={{ 
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: 'calc(100% + 2px)',
+                    border: 'none'
+                  }}
+                ></iframe>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -110,17 +157,25 @@ export default async function HomePage() {
           </div>
           <div className="reviews-grid">
             {reviews.map((review) => (
-              <div key={review.id} className="review-card">
-                <div className="review-header">
-                  <img src={review.avatar} alt={review.name} className="review-avatar" />
+              <div key={review.id} className="review-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="review-header" style={{ marginBottom: '10px' }}>
                   <div>
-                    <div className="review-name">{review.name}</div>
+                    <div className="review-name" style={{ fontSize: '1.1rem' }}>{review.name}</div>
                     <div className="review-rating">
                       {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                     </div>
                   </div>
                 </div>
-                <p style={{ color: '#555', fontStyle: 'italic' }}>"{review.comment}"</p>
+                <p style={{ color: '#555', fontStyle: 'italic', flex: 1 }}>"{review.comment}"</p>
+                <a 
+                  href={review.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="button compact" 
+                  style={{ marginTop: '20px', background: '#f6f4ef', color: '#8a4f17', border: '1px solid #8a4f17' }}
+                >
+                  Yoruma Git
+                </a>
               </div>
             ))}
           </div>
