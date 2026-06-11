@@ -5,6 +5,33 @@ import { useState } from 'react'
 export default function TourForm() {
   const [loading, setLoading] = useState(false)
   const [dates, setDates] = useState([{ startDate: '', endDate: '', price: '', capacity: '12' }])
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [coverPreview, setCoverPreview] = useState<string | null>(null)
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([])
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setCoverFile(file)
+      setCoverPreview(URL.createObjectURL(file))
+    }
+  }
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files) {
+      const newFiles = Array.from(files)
+      setGalleryFiles(prev => [...prev, ...newFiles])
+      const newPreviews = newFiles.map(file => URL.createObjectURL(file))
+      setGalleryPreviews(prev => [...prev, ...newPreviews])
+    }
+  }
+
+  const removeGalleryImage = (index: number) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index))
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index))
+  }
 
   const addDate = () => {
     setDates([...dates, { startDate: '', endDate: '', price: '', capacity: '12' }])
@@ -27,9 +54,63 @@ export default function TourForm() {
     setLoading(true)
     
     const formData = new FormData(e.currentTarget)
+    
+    let coverImageUrl = formData.get('coverImage') as string
+
+    // Eğer bir dosya seçildiyse önce onu yükle
+    if (coverFile) {
+      try {
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', coverFile)
+        
+        const uploadRes = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: uploadFormData
+        })
+        
+        const uploadResult = await uploadRes.json()
+        if (uploadResult.success) {
+          coverImageUrl = uploadResult.url
+        } else {
+          alert('Kapak resmi yüklenemedi: ' + uploadResult.message)
+          setLoading(false)
+          return
+        }
+      } catch (err) {
+        alert('Resim yüklenirken bir hata oluştu.')
+        setLoading(false)
+        return
+      }
+    }
+
+    if (!coverImageUrl) {
+      alert('Lütfen bir kapak görseli seçin veya URL girin.')
+      setLoading(false)
+      return
+    }
+
+    // Galeri resimlerini yükle
+    let galleryUrls: string[] = []
+    if (galleryFiles.length > 0) {
+      try {
+        const uploadPromises = galleryFiles.map(async (file) => {
+          const uploadFormData = new FormData()
+          uploadFormData.append('file', file)
+          const res = await fetch('/api/admin/upload', { method: 'POST', body: uploadFormData })
+          const result = await res.json()
+          return result.success ? result.url : null
+        })
+        
+        const uploaded = await Promise.all(uploadPromises)
+        galleryUrls = uploaded.filter(Boolean) as string[]
+      } catch (err) {
+        console.error('Gallery upload error:', err)
+      }
+    }
+
     const payload = {
       title: formData.get('title'),
-      coverImage: formData.get('coverImage'),
+      coverImage: coverImageUrl,
       location: formData.get('location'),
       duration: formData.get('duration'),
       highlights: String(formData.get('highlights') || '').split(',').map(s => s.trim()).filter(Boolean),
@@ -37,7 +118,7 @@ export default function TourForm() {
       included: String(formData.get('included') || '').split(',').map(s => s.trim()).filter(Boolean),
       excluded: String(formData.get('excluded') || '').split(',').map(s => s.trim()).filter(Boolean),
       terms: String(formData.get('terms') || '').split(',').map(s => s.trim()).filter(Boolean),
-      images: String(formData.get('images') || '').split(',').map(s => s.trim()).filter(Boolean),
+      images: galleryUrls,
       programTitle: formData.get('programTitle'),
       programDescription: formData.get('programDescription'),
       dates: dates // Send multiple dates
@@ -74,10 +155,23 @@ export default function TourForm() {
           Tur Başlığı
           <input name="title" placeholder="Görkemli Van Gölü Turu" required />
         </label>
-        <label>
-          Kapak Görseli URL
-          <input name="coverImage" placeholder="https://..." required />
-        </label>
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-end' }}>
+          <label style={{ flex: 1 }}>
+            Kapak Görseli
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleFileChange} 
+              style={{ marginTop: '5px', padding: '5px' }} 
+            />
+          </label>
+          {coverPreview && (
+            <div style={{ marginBottom: '5px' }}>
+              <img src={coverPreview} alt="Önizleme" style={{ width: '80px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #ddd' }} />
+            </div>
+          )}
+          <input type="hidden" name="coverImage" value="" />
+        </div>
       </div>
 
       <div className="form-row">
@@ -112,10 +206,35 @@ export default function TourForm() {
         </label>
       </div>
 
-      <label>
-        Galeri Görselleri (Virgül ile ayrılmış URL'ler)
-        <input name="images" placeholder="url1, url2, url3" />
-      </label>
+      <div style={{ marginBottom: '20px' }}>
+        <label>
+          Galeri Görselleri
+          <input 
+            type="file" 
+            multiple 
+            accept="image/*" 
+            onChange={handleGalleryChange}
+            style={{ marginTop: '5px', display: 'block' }}
+          />
+        </label>
+        {galleryPreviews.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+            {galleryPreviews.map((src, idx) => (
+              <div key={idx} style={{ position: 'relative' }}>
+                <img src={src} alt={`Galeri ${idx}`} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #ddd' }} />
+                <button 
+                  type="button" 
+                  onClick={() => removeGalleryImage(idx)}
+                  style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ff4d4d', color: '#fff', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px' }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <input type="hidden" name="images" value="" />
+      </div>
 
       <div style={{ padding: '20px', background: '#fbf7ef', borderRadius: '12px', margin: '10px 0' }}>
          <h3 style={{ fontSize: '1rem', marginBottom: '15px' }}>Tur Programı (1. Gün)</h3>
