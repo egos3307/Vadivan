@@ -68,6 +68,13 @@ export default function TourForm() {
           body: uploadFormData
         })
         
+        if (!uploadRes.ok) {
+          const errorData = await uploadRes.json().catch(() => ({ message: 'Sunucu hatası (Status: ' + uploadRes.status + ')' }))
+          alert('Kapak resmi yüklenemedi: ' + (errorData.message || 'Bilinmeyen sunucu hatası'))
+          setLoading(false)
+          return
+        }
+        
         const uploadResult = await uploadRes.json()
         if (uploadResult.success) {
           coverImageUrl = uploadResult.url
